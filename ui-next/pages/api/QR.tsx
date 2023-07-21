@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const secret = req.query.secret || '';
 
     // Construct the URL to encode in the QR code
-    const url = `http://cheque.arkt.me:3000/redeem?hash=${hash}&secret=${secret}`;
+    const url = `http://cheque.arkt.me:3000/redeem?hashq=${hash}&secretq=${secret}`;
 
     // Generate a QR code as a data URL
     const qrCodeDataURL = await QRCode.toDataURL(url);

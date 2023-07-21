@@ -5,6 +5,7 @@ import { useAccount,useNetwork,
          useSendTransaction, usePrepareSendTransaction } from "wagmi";
 import { ethers } from "ethers";
 import ComponentQR    from './componentQR';
+import crypto from 'crypto';
 
 export function DepositContent() {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -18,6 +19,8 @@ export function DepositContent() {
   const [account, setAccount]                   = useState("");
   const [contractAddress, setContractAddress]   = useState("");
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");
+  const [secretUponDeposit, setSecretUponDeposit] = useState("");
+  const [hashUponDeposit  , setHashUponDeposit] = useState("");
 
   useEffect(() => {
     setDomLoaded(true);
@@ -32,12 +35,12 @@ export function DepositContent() {
     console.log("useEffect wagmi_network.chain?.id: ", wagmi_network.chain?.id);
   }, [wagmi_network.chain?.id])
 
-  const secret = 'your secret here';
-  const hash = ethers.keccak256(ethers.toUtf8Bytes(secret));
-
+  const secret = 'yourSecretHere' + crypto.randomBytes(16).toString('hex');;
+  const hash   = ethers.keccak256(ethers.toUtf8Bytes(secret));
 
   /* for writing to contract */
   const contractABI                           = contractJson.abi
+  /*
   const { config: configContractWrite }       = usePrepareContractWrite({
     abi          : contractABI,
     chainId      : wagmi_network.chain?.id,
@@ -47,12 +50,34 @@ export function DepositContent() {
     value        : ethers.parseEther("0.02"),
     onSuccess(data){
       console.log("Prepare ContractWrite: success" + data)
+      setSecretUponDeposit(secret);
+      console.log("secretUponDeposit: " + secretUponDeposit)
     },
     onError(error){
       console.log("Prepare ContractWrite: error: " + error)
     }
   }) 
-  const { data, isLoading, isSuccess, write } = useContractWrite(configContractWrite)
+  */
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    abi          : contractABI,
+    chainId      : wagmi_network.chain?.id,
+    address      : contractJson.networks[networkId].address,
+    functionName : "deposit",
+    args         : [hash],
+    value        : ethers.parseEther("0.002"),
+    onSuccess(data){
+      console.log("ContractWrite: success" + data)
+      setSecretUponDeposit(secret);
+      setHashUponDeposit  (hash);
+      console.log("secretUponDeposit - useState Var  : " + secretUponDeposit)
+      console.log("secretUponDeposit - original Sec. : " + secret)
+      console.log("hashUponDeposit   - useState Var  : " + hashUponDeposit)
+      console.log("hashUponDeposit   - original Sec. : " + hash)
+    },
+    onError(error){
+      console.log("ContractWrite: error: " + error)
+    }
+  }) 
   const buttonContractWriteClicked = () => { 
     if (write){
       write();
@@ -72,17 +97,23 @@ export function DepositContent() {
             <svg height="1">
               <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
             </svg>
+            <br/>
+            <br/>
+            <button onClick={buttonContractWriteClicked}> [Issue "Cheque DeFi" ] </button><br />
+            {isSuccess &&
+             <ComponentQR hash={hash} secret={secretUponDeposit} />}
+            <br/>
+            <svg height="1">
+              <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
+            </svg>
             <p>Account         : {account}</p>
             <p>Network ID      : {networkId}</p>
             <p>Network Name    : {networkName}</p>
             <p>Contract Address: {contractAddress}</p>
             <p>Block Explorer  : {blockExplorerUrl}</p>
-            <button onClick={buttonContractWriteClicked}>Send Transaction [Deposit]</button><br />
             {isLoading && <p>Loading...</p>}
             {isSuccess &&
              <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
-            {isSuccess &&
-             <ComponentQR hash={hash} secret={secret} />}
           </div>
         }
       </div>

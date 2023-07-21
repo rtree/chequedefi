@@ -4,6 +4,7 @@ import { useAccount,useNetwork,
          useContractWrite  , usePrepareContractWrite,
          useSendTransaction, usePrepareSendTransaction } from "wagmi";
 import { ethers } from "ethers";
+import { useRouter } from 'next/router';
 
 export function RedeemContent() {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -18,6 +19,12 @@ export function RedeemContent() {
   const [contractAddress, setContractAddress]   = useState("");
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");
 
+  const router = useRouter();
+  const { hashq = '', secretq = '' } = router.query;
+
+  const secret = secretq?(Array.isArray(secretq)?'yourSecretHere---':secretq):'yourSecretHere---';
+  const hash   = ethers.keccak256(ethers.toUtf8Bytes(secret));
+
   useEffect(() => {
     setDomLoaded(true);
   }, []);
@@ -30,9 +37,6 @@ export function RedeemContent() {
     setBlockExplorerUrl(wagmi_network.chain?.blockExplorers?.[0]?.url?wagmi_network.chain?.blockExplorers?.[0]?.url:"");
     console.log("useEffect wagmi_network.chain?.id: ", wagmi_network.chain?.id);
   }, [wagmi_network.chain?.id])
-
-  const secret = 'your secret here';
-  const hash = ethers.keccak256(ethers.toUtf8Bytes(secret));
 
 
   /* for writing to contract */
@@ -70,12 +74,17 @@ export function RedeemContent() {
             <svg height="1">
               <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
             </svg>
+            <br/>
+            <br/>
+            <button onClick={buttonContractWriteClicked}>[Redeem]</button><br />
+            <svg height="1">
+              <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
+            </svg>
             <p>Account         : {account}</p>
             <p>Network ID      : {networkId}</p>
             <p>Network Name    : {networkName}</p>
             <p>Contract Address: {contractAddress}</p>
             <p>Block Explorer  : {blockExplorerUrl}</p>
-            <button onClick={buttonContractWriteClicked}>Send Transaction [Redeem]</button><br />
             {isLoading && <p>Loading...</p>}
             {isSuccess && <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
           </div>

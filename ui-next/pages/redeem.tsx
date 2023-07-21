@@ -45,26 +45,13 @@ const wagmiConfig      = createConfig({
 })
 const ethereumClient = new EthereumClient(wagmiConfig, chains)
 
-export default function Deposit() {
+export default function Redeem() {
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
         <Web3Button></Web3Button>
         <Web3NetworkSwitch />
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
-        <DepositContent></DepositContent>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
         <RedeemContent></RedeemContent>
       </WagmiConfig>
     </>
