@@ -2,6 +2,8 @@ import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Button, Web3Modal, Web3NetworkSwitch   } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { goerli, polygonMumbai, mantleTestnet       } from 'wagmi/chains'
+import { DepositContent                             } from './depositContent'
+import { RedeemContent } from './redeemContent'
 
 const neonTestnet = {
   id: 245022926,
@@ -43,13 +45,15 @@ const wagmiConfig      = createConfig({
 })
 const ethereumClient = new EthereumClient(wagmiConfig, chains)
 
-export default function Issue() {
+export default function Deposit() {
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
         <Web3Button></Web3Button>
         <Web3NetworkSwitch />
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+        <DepositContent></DepositContent>
+        <RedeemContent></RedeemContent>
       </WagmiConfig>
     </>
   )
