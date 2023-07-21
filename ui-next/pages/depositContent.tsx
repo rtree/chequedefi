@@ -4,6 +4,7 @@ import { useAccount,useNetwork,
          useContractWrite  , usePrepareContractWrite,
          useSendTransaction, usePrepareSendTransaction } from "wagmi";
 import { ethers } from "ethers";
+import ComponentQR    from './componentQR';
 
 export function DepositContent() {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -78,7 +79,10 @@ export function DepositContent() {
             <p>Block Explorer  : {blockExplorerUrl}</p>
             <button onClick={buttonContractWriteClicked}>Send Transaction [Deposit]</button><br />
             {isLoading && <p>Loading...</p>}
-            {isSuccess && <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
+            {isSuccess &&
+             <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
+            {isSuccess &&
+             <ComponentQR hash={hash} secret={secret} />}
           </div>
         }
       </div>
