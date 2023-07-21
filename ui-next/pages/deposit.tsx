@@ -65,7 +65,6 @@ export default function Deposit() {
         <br></br>
         <br></br>
         <br></br>
-        <RedeemContent></RedeemContent>
       </WagmiConfig>
     </>
   )

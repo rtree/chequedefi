@@ -63,24 +63,19 @@ export function DepositContent() {
     chainId      : wagmi_network.chain?.id,
     address      : contractJson.networks[networkId].address,
     functionName : "deposit",
-    args         : [hash],
-    value        : ethers.parseEther("0.002"),
-    onSuccess(data){
-      console.log("ContractWrite: success" + data)
+  }) 
+  const buttonContractWriteClicked = () => { 
+    if (write){
+      write({
+        args         : [hash],
+        value        : ethers.parseEther("0.002"),    
+      });
       setSecretUponDeposit(secret);
-      setHashUponDeposit  (hash);
+      setHashUponDeposit  (hash  );
       console.log("secretUponDeposit - useState Var  : " + secretUponDeposit)
       console.log("secretUponDeposit - original Sec. : " + secret)
       console.log("hashUponDeposit   - useState Var  : " + hashUponDeposit)
       console.log("hashUponDeposit   - original Sec. : " + hash)
-    },
-    onError(error){
-      console.log("ContractWrite: error: " + error)
-    }
-  }) 
-  const buttonContractWriteClicked = () => { 
-    if (write){
-      write();
     }
   }
 
