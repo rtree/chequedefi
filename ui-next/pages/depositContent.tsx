@@ -68,7 +68,7 @@ export function DepositContent() {
     if (write){
       write({
         args         : [hash],
-        value        : ethers.parseEther("0.002"),    
+        value        : ethers.parseEther("0.02"),    
       });
       setSecretUponDeposit(secret);
       setHashUponDeposit  (hash  );
