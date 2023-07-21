@@ -67,6 +67,9 @@ export function RedeemContent() {
         {domLoaded &&
           wagmi_account.address && 
           <div>
+            <svg height="1">
+              <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
+            </svg>
             <p>Account         : {account}</p>
             <p>Network ID      : {networkId}</p>
             <p>Network Name    : {networkName}</p>
