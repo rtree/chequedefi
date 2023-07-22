@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Get the secret from the query parameters
     const secret = req.query.secret || '';
     const networkId = req.query.networkId || '5001'; //default is mantle testnet.
+    const baseTokenSymbol = req.query.baseTokenSymbol || 'MNT'; //default is Mantle.
 
     // Construct the URL to encode in the QR code
     //const urlqr = `http://cheque.arkt.me:3000/redeem?secretq=${secret}`;
@@ -29,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const newHeight = qrCodeImage.height * 0.6;
 
     // Draw the QR code image on the page
-    page.drawText('Scan the QR code:');
+    page.drawText('1 '+ baseTokenSymbol);
     page.drawImage(qrCodeImage, {
       x: 0,
       y: 30,

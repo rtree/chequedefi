@@ -53,18 +53,6 @@ export default function Deposit() {
         <Web3NetworkSwitch />
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
         <DepositContent></DepositContent>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
       </WagmiConfig>
     </>
   )

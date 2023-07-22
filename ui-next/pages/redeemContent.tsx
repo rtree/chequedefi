@@ -6,6 +6,13 @@ import { useAccount,useNetwork,
 import { ethers } from "ethers";
 import { useRouter } from 'next/router';
 
+/* for ui */
+import Typography from '@mui/material/Typography';
+import Button from   '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import Box from '@mui/material/Box';
+
 export function RedeemContent() {
   const [domLoaded, setDomLoaded] = useState(false);
   const contractJson                          = require("../../truffle/build/contracts/ChequeDefi.json");
@@ -65,31 +72,34 @@ export function RedeemContent() {
   console.log("re-rendered content.tsx")
   return (
     <>
-      <div>
+    <div suppressHydrationWarning >
         {domLoaded &&
           !wagmi_account.address && <p>Wagmi not connected.</p>
         }
         {domLoaded &&
           wagmi_account.address && 
           <div>
+            <Box border={1} borderColor="primary.main" marginTop={3} marginLeft={1} marginRight={1}>
             <svg height="1">
               <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
             </svg>
             <br/>
             <br/>
-            <button onClick={buttonContractWriteClicked}>[Redeem]</button><br />
-            { wagmi_network.chain?.id != depositedNetwork &&
-            <p>
-              Warning: Fund to redeem is in different network. Please connect to &nbsp;
-              {wagmi_network.chains[depositedNetwork] 
-                ? wagmi_network.chains[depositedNetwork].name 
-                : depositedNetwork
-              }.
-            </p>
-            }
+            <Button variant="contained" color="primary" startIcon={<CurrencyExchangeIcon/>} onClick={buttonContractWriteClicked}>[Redeem]</Button><br />
             <svg height="1">
               <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
             </svg>
+            </Box>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <p>Account         : {account}</p>
             <p>Network ID      : {networkId}</p>
             <p>Network Name    : {networkName}</p>
@@ -99,7 +109,8 @@ export function RedeemContent() {
             {isSuccess && <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
           </div>
         }
-      </div>
+    </div>
+
     </>
   )  
 }

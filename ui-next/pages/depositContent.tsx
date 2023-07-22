@@ -8,6 +8,13 @@ import ComponentQR    from './componentQR';
 import crypto from 'crypto';
 import axios from 'axios';
 
+/* for ui */
+import Typography from '@mui/material/Typography';
+import Button from   '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import Box from '@mui/material/Box';
+
 export function DepositContent() {
   const [domLoaded, setDomLoaded] = useState(false);
   const contractJson                          = require("../../truffle/build/contracts/ChequeDefi.json");
@@ -22,6 +29,9 @@ export function DepositContent() {
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");
   const [secretUponDeposit, setSecretUponDeposit] = useState("");
   const [hashUponDeposit  , setHashUponDeposit] = useState("");
+  const [networkIdUponDeposit, setNetworkIdUponDeposit] = useState(0);
+  const [baseTokenSymbol, setBaseTokenSymbol] = useState("");
+  const [baseTokenSymbolUponDeposit, setBaseTokenSymbolUponDeposit] = useState("");
 
   useEffect(() => {
     setDomLoaded(true);
@@ -31,6 +41,7 @@ export function DepositContent() {
     setAccount(wagmi_account.address?wagmi_account.address:"");
     setNetworkId(wagmi_network.chain?.id   ?wagmi_network.chain?.id:5);
     setNetworkName(wagmi_network.chain?.name   ?wagmi_network.chain?.name:"goerli");
+    setBaseTokenSymbol(wagmi_network.chain?.nativeCurrency.symbol ? wagmi_network.chain?.nativeCurrency.symbol : "");
     setContractAddress(contractJson.networks[networkId].address?contractJson.networks[networkId].address:"");
     setBlockExplorerUrl(wagmi_network.chain?.blockExplorers?.[0]?.url?wagmi_network.chain?.blockExplorers?.[0]?.url:"");
     console.log("useEffect wagmi_network.chain?.id: ", wagmi_network.chain?.id);
@@ -73,10 +84,17 @@ export function DepositContent() {
       });
       setSecretUponDeposit(secret);
       setHashUponDeposit  (hash  );
+      setNetworkIdUponDeposit(networkId);
+      setBaseTokenSymbolUponDeposit(baseTokenSymbol);
+
       console.log("secretUponDeposit - useState Var  : " + secretUponDeposit)
       console.log("secretUponDeposit - original Sec. : " + secret)
       console.log("hashUponDeposit   - useState Var  : " + hashUponDeposit)
       console.log("hashUponDeposit   - original Sec. : " + hash)
+      console.log("networkIdUponDeposit - useState Var  : " + networkIdUponDeposit)
+      console.log("networkIdUponDeposit - original Sec. : " + networkId)
+      console.log("baseTokenSymbolUponDeposit - useState Var  : " + baseTokenSymbolUponDeposit)
+      console.log("baseTokenSymbolUponDeposit - original Sec. : " + baseTokenSymbol)
 
       /*
       try {
@@ -96,29 +114,44 @@ export function DepositContent() {
   console.log("re-rendered content.tsx")
   return (
     <>
-      <div>
+    <div suppressHydrationWarning >
         {domLoaded &&
           !wagmi_account.address && <p>Wagmi not connected.</p>
         }
         {domLoaded &&
           wagmi_account.address && 
           <div>
-            <svg height="1">
-              <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
-            </svg>
+            <Box border={1} borderColor="primary.main" marginTop={3} marginLeft={1} marginRight={1}>
+              <svg height="1">
+                <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
+              </svg>
+              <br/>
+              <br/>
+              <Button variant="contained" color="primary" startIcon={<SendIcon/>} onClick={buttonContractWriteClicked}> [Issue "Cheque DeFi" ] </Button><br />
+              {isSuccess &&
+              <ComponentQR hash={hash} secret={secretUponDeposit} networkId={networkIdUponDeposit} baseTokenSymbol={baseTokenSymbolUponDeposit} />}
+              <br/>
+              <svg height="1">
+                <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
+              </svg>
+              <Typography variant="body2">
+              <p>❤zkbob_polygon: Heg67BoayN2uWqmQjy983PYvP8kDMmd6EaR3qwyGYxVctDueefxZdDWSWBxJeDv❤</p>
+              </Typography>
+            </Box>
             <br/>
             <br/>
-            <button onClick={buttonContractWriteClicked}> [Issue "Cheque DeFi" ] </button><br />
-            {isSuccess &&
-             <ComponentQR hash={hash} secret={secretUponDeposit} />}
             <br/>
-            <svg height="1">
-              <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
-            </svg>
-            <p>❤zkbob_polygon:Heg67BoayN2uWqmQjy983PYvP8kDMmd6EaR3qwyGYxVctDueefxZdDWSWBxJeDv❤</p>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <p>Account         : {account}</p>
             <p>Network ID      : {networkId}</p>
             <p>Network Name    : {networkName}</p>
+            <p>Base Token Symbol: {baseTokenSymbol}</p>
             <p>Contract Address: {contractAddress}</p>
             <p>Block Explorer  : {blockExplorerUrl}</p>
             {isLoading && <p>Loading...</p>}
@@ -126,8 +159,8 @@ export function DepositContent() {
              <p>Success: {blockExplorerUrl?blockExplorerUrl:"" } { data?.hash } </p>}
           </div>
         }
-      </div>
-    </>
+    </div>
+  </>
   )  
 }
 
