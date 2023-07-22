@@ -5,11 +5,15 @@ import { Base64 } from 'js-base64';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Get the input string from the query parameters
-    const inputString = req.query.inputString || 'https://twitter.com/rtree/';
+    // Get the hash and secret from the query parameters
+    const hash   = req.query.hash || '';
+    const secret = req.query.secret || '';
+
+    // Construct the URL to encode in the QR code
+    const urlqr = `http://cheque.arkt.me:3000/redeem?secretq=${secret}`;
 
     // Generate a QR code as a data URL
-    const qrCodeDataURL = await QRCode.toDataURL(inputString[0]);
+    const qrCodeDataURL = await QRCode.toDataURL(urlqr);
     const qrCodeData = Uint8Array.from(atob(qrCodeDataURL.split(',')[1]), c => c.charCodeAt(0));
 
     // Create a new PDF document
@@ -19,13 +23,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Load the QR code image
     const qrCodeImage = await pdfDoc.embedPng(qrCodeData);
 
+    // Calculate the new dimensions
+    const newWidth = qrCodeImage.width * 0.6;
+    const newHeight = qrCodeImage.height * 0.6;
+
     // Draw the QR code image on the page
-    page.drawText('Scan the QR code to visit:');
+    page.drawText('Scan the QR code:');
     page.drawImage(qrCodeImage, {
       x: 0,
       y: 30,
-      width: qrCodeImage.width,
-      height: qrCodeImage.height,
+      width: newWidth,
+      height: newHeight,
     });
 
     // Serialize the PDFDocument to bytes (a Uint8Array)
@@ -37,12 +45,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Construct the URL
     const url =
       'siiprintagent://1.0/print?' +
-      'CallbackSuccess=' +
-      encodeURIComponent('https://example.com/success') +
-      '&' +
-      'CallbackFail=' +
-      encodeURIComponent('https://example.com/fail') +
-      '&' +
       'Format=pdf' +
       '&' +
       'Data=' +

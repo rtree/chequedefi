@@ -6,6 +6,7 @@ import { useAccount,useNetwork,
 import { ethers } from "ethers";
 import ComponentQR    from './componentQR';
 import crypto from 'crypto';
+import axios from 'axios';
 
 export function DepositContent() {
   const [domLoaded, setDomLoaded] = useState(false);
@@ -64,7 +65,7 @@ export function DepositContent() {
     address      : contractJson.networks[networkId].address,
     functionName : "deposit",
   }) 
-  const buttonContractWriteClicked = () => { 
+  const buttonContractWriteClicked = async () => { 
     if (write){
       write({
         args         : [hash],
@@ -76,6 +77,19 @@ export function DepositContent() {
       console.log("secretUponDeposit - original Sec. : " + secret)
       console.log("hashUponDeposit   - useState Var  : " + hashUponDeposit)
       console.log("hashUponDeposit   - original Sec. : " + hash)
+
+      /*
+      try {
+        // Call the QRPDFMobile API
+        const response = await axios.get(`/api/QRPDFmobile?hash=${hash}&secret=${secretUponDeposit}`);
+        const url = response.data.url;
+
+        // Open the URL in a new tab (or in a mobile app)
+        window.open(url, '_blank');
+      } catch (err) {
+        console.error(err);
+      }
+      */
     }
   }
 

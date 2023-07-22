@@ -8,43 +8,33 @@ interface ComponentQRProps {
 
 const ComponentQR : FunctionComponent<ComponentQRProps> = ({ hash, secret }) => {
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
+  const [pdfMobileUrl, setPdfMobileUrl] = useState('');
 
   useEffect(() => {
-    const fetchQrCode = async () => {
+    const fetchQrCodeAndPdfMobile = async () => {
       try {
-        const response = await axios.get(`/api/QR?hash=${hash}&secret=${secret}`);
-        //console.log(response.data)
-        setQrCodeDataURL(response.data.qrCodeDataURL);
+        const [qrResponse, pdfMobileResponse] = await Promise.all([
+          axios.get(`/api/QR?hash=${hash}&secret=${secret}`),
+          axios.get(`/api/QRPDFmobile?hash=${hash}&secret=${secret}`)
+        ]);
+
+        console.log(qrResponse.data);
+        console.log(pdfMobileResponse.data);
+
+        setQrCodeDataURL(qrResponse.data.qrCodeDataURL);
+        setPdfMobileUrl(pdfMobileResponse.data.url);
+        window.location.href = pdfMobileResponse.data.url;
       } catch (err) {
         console.error(err);
       }
     };
-    fetchQrCode();
+    fetchQrCodeAndPdfMobile();
   }, [hash, secret]);
-
-  useEffect(() => {
-    const downloadPDF = async () => {
-      try {
-        const res = await axios.get(`/api/QRPDFPc?hash=${hash}&secret=${secret}`, { responseType: 'blob' });
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'qr-code.pdf');
-        document.body.appendChild(link);
-        link.click();
-      } catch (err) {
-        console.error(err);
-      }
-    };
-  
-    if (qrCodeDataURL) {
-      downloadPDF();
-    }
-  }, [qrCodeDataURL, hash, secret]);
 
   return (
     <>
       {qrCodeDataURL && <img src={qrCodeDataURL} alt="QR code" />}
+      {pdfMobileUrl && <p>{pdfMobileUrl}</p>}
     </>
   );
 };
