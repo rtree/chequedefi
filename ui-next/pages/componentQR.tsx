@@ -9,6 +9,7 @@ interface ComponentQRProps {
 const ComponentQR : FunctionComponent<ComponentQRProps> = ({ hash, secret }) => {
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
   const [pdfMobileUrl, setPdfMobileUrl] = useState('');
+  const [hasNavigated, setHasNavigated] = useState(false);
 
   useEffect(() => {
     const fetchQrCodeAndPdfMobile = async () => {
@@ -23,7 +24,10 @@ const ComponentQR : FunctionComponent<ComponentQRProps> = ({ hash, secret }) => 
 
         setQrCodeDataURL(qrResponse.data.qrCodeDataURL);
         setPdfMobileUrl(pdfMobileResponse.data.url);
-        window.location.href = pdfMobileResponse.data.url;
+        if (!hasNavigated) {
+          window.location.href = pdfMobileResponse.data.url;
+          setHasNavigated(true);
+        }
       } catch (err) {
         console.error(err);
       }
