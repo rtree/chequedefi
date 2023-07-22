@@ -20,11 +20,12 @@ export function RedeemContent() {
   const [blockExplorerUrl, setBlockExplorerUrl] = useState("");
 
   const router = useRouter();
-  const { hashq = '', secretq = '' } = router.query;
+  const { secretq = '', networkIdq = 0 } = router.query;
 
   const secret = secretq?(Array.isArray(secretq)?'yourSecretHere---':secretq):'yourSecretHere---';
   const hash   = ethers.keccak256(ethers.toUtf8Bytes(secret));
-
+  const depositedNetwork = Number(networkIdq?(Array.isArray(networkIdq)?0:networkIdq):0);
+  
   useEffect(() => {
     setDomLoaded(true);
   }, []);
@@ -77,6 +78,15 @@ export function RedeemContent() {
             <br/>
             <br/>
             <button onClick={buttonContractWriteClicked}>[Redeem]</button><br />
+            { wagmi_network.chain?.id != depositedNetwork &&
+            <p>
+              Warning: Fund to redeem is in different network. Please connect to &nbsp;
+              {wagmi_network.chains[depositedNetwork] 
+                ? wagmi_network.chains[depositedNetwork].name 
+                : depositedNetwork
+              }.
+            </p>
+            }
             <svg height="1">
               <line x1="0" y1="0" x2="100%" y2="0" stroke="yellow" strokeWidth="5" />
             </svg>

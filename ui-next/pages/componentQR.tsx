@@ -15,12 +15,12 @@ const ComponentQR : FunctionComponent<ComponentQRProps> = ({ hash, secret }) => 
     const fetchQrCodeAndPdfMobile = async () => {
       try {
         const [qrResponse, pdfMobileResponse] = await Promise.all([
-          axios.get(`/api/QR?hash=${hash}&secret=${secret}`),
-          axios.get(`/api/QRPDFmobile?hash=${hash}&secret=${secret}`)
+          axios.get(`/api/QR?secret=${secret}`),
+          axios.get(`/api/QRPDFmobile?secret=${secret}`)
         ]);
 
-        console.log(qrResponse.data);
-        console.log(pdfMobileResponse.data);
+        //console.log(qrResponse.data);
+        //console.log(pdfMobileResponse.data);
 
         setQrCodeDataURL(qrResponse.data.qrCodeDataURL);
         setPdfMobileUrl(pdfMobileResponse.data.url);

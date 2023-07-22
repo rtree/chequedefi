@@ -5,12 +5,13 @@ import { Base64 } from 'js-base64';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Get the hash and secret from the query parameters
-    const hash   = req.query.hash || '';
+    // Get the secret from the query parameters
     const secret = req.query.secret || '';
+    const networkId = req.query.networkId || '5001'; //default is mantle testnet.
 
     // Construct the URL to encode in the QR code
-    const urlqr = `http://cheque.arkt.me:3000/redeem?secretq=${secret}`;
+    //const urlqr = `http://cheque.arkt.me:3000/redeem?secretq=${secret}`;
+    const urlqr = `http://cheque.arkt.me:3000/redeem?secretq=${secret}&networkId=${networkId}`;
 
     // Generate a QR code as a data URL
     const qrCodeDataURL = await QRCode.toDataURL(urlqr);
