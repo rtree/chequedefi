@@ -19,6 +19,7 @@
     "eslint-config-next": "13.4.11",
     "ethers": "^6.6.4",
     "js-base64": "^3.7.5",
+    "js-file-download": "^0.4.12",
     "next": "13.4.11",
     "pdf-lib": "^1.17.1",
     "qrcode": "^1.5.3",
