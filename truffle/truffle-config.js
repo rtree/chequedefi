@@ -22,11 +22,11 @@ module.exports = {
       skipDryRun: true
       },
     mantleTestnet: {
-      provider: () => new HDWalletProvider(MNEMONIC, `https://mantle-testnet.rpc.thirdweb.com`), //quicknode
+      provider: () => new HDWalletProvider(MNEMONIC, `https://mantle-testnet.rpc.thirdweb.com`), 
       network_id: 5001 // mantle testnet
     },
     neonTestnet: {
-      provider: () => new HDWalletProvider(MNEMONIC, `https://devnet.neonevm.org`), //quicknode
+      provider: () => new HDWalletProvider(MNEMONIC, `https://devnet.neonevm.org`),
       network_id: 245022926 // neon testnet
     },
   },
