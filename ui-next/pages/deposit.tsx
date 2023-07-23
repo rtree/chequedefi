@@ -15,11 +15,19 @@ const neonTestnet = {
     symbol: "NEON",
   },
   rpcUrls: {
+    /*
     default: {
       http: ["https://devnet.neonevm.org"],
     },
     public: {
       http: ["https://devnet.neonevm.org"],
+    },
+    */
+    default: {
+      http: ["https://proxy.devnet.neonlabs.org/solana"],
+    },
+    public: {
+      http: ["https://proxy.devnet.neonlabs.org/solana"],
     },
   },
   blockExplorers: {

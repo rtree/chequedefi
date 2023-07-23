@@ -26,7 +26,8 @@ module.exports = {
       network_id: 5001 // mantle testnet
     },
     neonTestnet: {
-      provider: () => new HDWalletProvider(MNEMONIC, `https://devnet.neonevm.org`),
+      //provider: () => new HDWalletProvider(MNEMONIC, `https://devnet.neonevm.org`),
+      provider: () => new HDWalletProvider(MNEMONIC, `https://proxy.devnet.neonlabs.org/solana`),
       network_id: 245022926 // neon testnet
     },
   },
